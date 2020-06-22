@@ -1,8 +1,24 @@
-import Vue from 'vue'
-import App from './App.vue'
+import {routes} from '@/router';
+import Vue       from 'vue'
+import App       from './App.vue'
+import ElementUI from 'element-ui';
+import Element   from 'element-ui';
+import VueRouter from 'vue-router';
 
-Vue.config.productionTip = false
+import 'element-ui/lib/theme-chalk/index.css';
+
+Vue.use(ElementUI);
+Vue.use(Element, { size: 'small', zIndex: 3000 });
+Vue.use(VueRouter);
+
+Vue.config.productionTip = false;
+
+const router = new VueRouter({
+  mode: 'history',
+  routes
+});
 
 new Vue({
   render: h => h(App),
-}).$mount('#app')
+  router,
+}).$mount('#app');
