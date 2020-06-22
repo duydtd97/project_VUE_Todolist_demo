@@ -1,7 +1,5 @@
 <template>
   <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-<!--    <Home msg='Đăng nhập trước đã rồi làm gì thì làm nhé bạn ôi!'/>-->
 
     <router-view/>
   </div>
@@ -9,13 +7,9 @@
 
 <script>
 
-
-// import Home from '@/views/Home';
-
 export default {
   name: 'App',
   components: {
-    // Home
   }
 }
 </script>
@@ -27,6 +21,5 @@ export default {
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
-  margin-top: 60px;
 }
 </style>

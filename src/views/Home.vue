@@ -1,10 +1,12 @@
 <template>
   <div class = "hello">
-    <h1 class="pre-formatted">{{ msg }}</h1>
+    <img alt="Vue logo" src="../assets/logo.png">
 
-    <!--    <el-row>-->
-    <!--      <el-button @click = "changeOpenLogin()">Đăng nhập</el-button>-->
-    <!--    </el-row>-->
+    <h1 class="pre-formatted">Đăng nhập trước đã rồi làm gì thì làm nhé bạn ôi!</h1>
+
+<!--    <el-row>-->
+<!--      <el-button @click = "$router.push('/user')">Go to user</el-button>-->
+<!--    </el-row>-->
 
     <Login v-if='openLogin' v-bind:open = 'openLogin' @openRegister='changeOpenRegister()'/>
     <Register v-if='openRegister' v-bind:open = 'openRegister' @openLogin='changeOpenLogin()'/>
@@ -48,5 +50,8 @@
 <style scoped>
   .pre-formatted {
     white-space: pre;
+  }
+  .hello{
+    margin-top: 32px;
   }
 </style>
