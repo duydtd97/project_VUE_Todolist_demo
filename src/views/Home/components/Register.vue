@@ -9,7 +9,7 @@
                 <el-form ref = "formRegister" :model = "formRegister" :rules="rules" :label-position = "'left'" v-on:submit.prevent>
                   <el-form-item label = "Email"
                                 prop="email"
-                                v-bind:error='errMess'
+                                v-bind:error='errCode === 201 ? "" : errMess'
                   >
                     <el-input v-model = "formRegister.email" />
                   </el-form-item>
@@ -67,16 +67,10 @@
         }
       };
 
-      const emailIsExist = (rule, value, callback) => {
-        console.log('email exist' + this.errCode);
-        if (value && this.errCode === 422){
-          callback(new Error(this.errMess));
-        }
-      };
-
       return{
         errCode: '',
         errMess: '',
+        isLoading: false,
 
         formRegister: {
           email: '',
@@ -87,7 +81,6 @@
           email: [
               { required: true, message: 'Please input email address', trigger: 'blur' },
               { type: 'email', message: 'Please input correct email address', trigger: ['blur', 'change'] },
-              { validator: emailIsExist, trigger: ['blur'] }
             ],
           password: [
             { required: true, message: 'Please input password', trigger: 'blur' },
@@ -102,15 +95,17 @@
     },
     methods: {
       onSubmit() {
+        this.isLoading = true;
+
         axios.post('/auth/signup', this.formRegister)
           .then(res =>{
+            this.isLoading = false;
             this.errCode = res.status;
-            console.log(res);
           })
           .catch(err=>{
+            this.isLoading = false;
             this.errMess = err.response.data.message;
             this.errCode = err.response.status;
-            console.log(err.response);
           })
       },
       openFormLogin(){

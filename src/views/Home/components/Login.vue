@@ -9,7 +9,7 @@
                 <el-form ref = "formLogin" :model = "formLogin" :rules="rules" :label-position = "'left'" @submit.native.prevent>
                   <el-form-item label = "Email"
                                 prop="email"
-                                v-bind:error='errMess'
+                                v-bind:error='errCode === 201 ? "" : errMess'
                   >
                     <el-input v-model = "formLogin.email"/>
                   </el-form-item>
@@ -17,7 +17,7 @@
                     <el-input v-model = "formLogin.password" autocomplete="off" type='password'/>
                   </el-form-item>
                   <el-form-item>
-                    <el-button type = "primary" @click = "onSubmit">Sign In</el-button>
+                    <el-button type = "primary" @click = "onSubmit" :loading="isLoading">Sign In</el-button>
                   </el-form-item>
                 </el-form>
 
@@ -55,6 +55,7 @@
       return{
         errCode: '',
         errMess: '',
+        isLoading: false,
 
         formLogin: {
           email: '',
@@ -76,14 +77,16 @@
     methods: {
       onSubmit() {
         console.log('Onsubmit!');
-        axios.post('/auth/signin', this.formRegister)
+        this.isLoading = true;
+        axios.post('/auth/signin', this.formLogin)
           .then(res =>{
+            this.isLoading = false;
             console.log(res);
           })
           .catch(err=>{
+            this.isLoading = false;
             this.errMess = err.response.data.message;
             this.errCode = err.response.status;
-            console.log(err.response);
           })
       },
       openFormRegister(){
