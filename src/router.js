@@ -1,5 +1,5 @@
-import Home from '@/views/Home';
-import User from '@/views/User';
+import Home from '@/views/Home/index';
+import User from '@/views/User/index';
 
 export const routes =
   [

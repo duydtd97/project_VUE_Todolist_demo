@@ -1,6 +1,6 @@
 <template>
   <div class = "hello">
-    <img alt="Vue logo" src="../assets/logo.png">
+    <img alt="Vue logo" src="../../assets/logo.png">
 
     <h1 class="pre-formatted">Đăng nhập trước đã rồi làm gì thì làm nhé bạn ôi!</h1>
 
@@ -16,9 +16,8 @@
 
 
 <script>
-  import Login    from '@/components/Account/Login';
-  import Register from '@/components/Account/Register';
-
+  import Login    from '@/views/Home/components/Login';
+  import Register from '@/views/Home/components/Register';
   export default {
     name: 'Home',
     components: {Register, Login},

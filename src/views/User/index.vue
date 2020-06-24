@@ -10,7 +10,7 @@
 </template>
 
 <script>
-  import Dashboard from '@/components/Dashboard/index';
+  import Dashboard from '@/views/User/components/Dashboard/index';
   import SideBar   from '@/components/NavBar/SideBar';
 
   export default {
