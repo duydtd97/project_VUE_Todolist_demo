@@ -33,7 +33,11 @@
 </template>
 
 <script>
-  import {axios} from '@/utils/axiosInstance';
+  import {
+    axios,
+    AUTH_TOKEN,
+  }              from '@/utils/axiosInstance';
+  import Cookies from 'js-cookie';
 
   export default {
     name: 'Login',
@@ -81,7 +85,9 @@
         axios.post('/auth/signin', this.formLogin)
           .then(res =>{
             this.isLoading = false;
-            console.log(res);
+            localStorage.setItem('userEmail', `${res.data.email}`);
+            Cookies.set(AUTH_TOKEN, res.data.auth_token, { expires: 7 });
+            this.$router.push('/user');
           })
           .catch(err=>{
             this.isLoading = false;

@@ -2,7 +2,7 @@ import axiosBase from 'axios';
 
 const DOMAIN = 'https://mockup-api.herokuapp.com/';
 
-export const TOKEN = 'token';
+export const AUTH_TOKEN = 'auth_token';
 
 const headers = {
   Accept: 'application/json',

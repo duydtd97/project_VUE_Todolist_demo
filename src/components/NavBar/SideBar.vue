@@ -2,49 +2,41 @@
   <div class='mySideBar'>
     <div class='box_avatar'>
       <el-avatar :size="100" :src="circleUrl"/>
-      <p>abc@gmail.clm</p>
+      <p>{{userEmail}}</p>
     </div>
     <el-menu
-        default-active="2"
         class="el-menu-vertical-demo"
         style='border: none'
         @open="handleOpen"
         @close="handleClose">
-      <el-submenu index="1" class='styleSubItem'>
-        <template slot="title">
-          <i class="el-icon-location"></i>
-          <span>Navigator One</span>
-        </template>
-        <el-menu-item-group title="Group One">
-          <el-menu-item index="1-1">item one</el-menu-item>
-          <el-menu-item index="1-2">item one</el-menu-item>
-        </el-menu-item-group>
-        <el-menu-item-group title="Group Two">
-          <el-menu-item index="1-3">item three</el-menu-item>
-        </el-menu-item-group>
-        <el-submenu index="1-4">
-          <template slot="title">item four</template>
-          <el-menu-item index="1-4-1">item one</el-menu-item>
-        </el-submenu>
-      </el-submenu>
       <el-menu-item index="2" class='styleSubItem'>
-        <i class="el-icon-menu"></i>
+        <i class="el-icon-switch-button"></i>
         <span>Navigator Two</span>
       </el-menu-item>
-      <el-menu-item index="3" class='styleSubItem' disabled>
-        <i class="el-icon-document"></i>
-        <span>Navigator Three</span>
+      <el-menu-item index="2" class='styleSubItem' @click='logout'>
+        <i class="el-icon-switch-button"></i>
+        <span>Logout</span>
       </el-menu-item>
     </el-menu>
   </div>
 </template>
 
 <script>
+  import {AUTH_TOKEN} from '@/utils/axiosInstance';
+  import Cookies from 'js-cookie';
+
   export default {
     name:'SideBar',
     data () {
       return {
         circleUrl: "https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png",
+        userEmail: localStorage.getItem('userEmail')
+      }
+    },
+    methods:{
+      logout() {
+        Cookies.remove(AUTH_TOKEN);
+        this.$router.push('/')
       }
     }
   };
@@ -53,6 +45,9 @@
 <style scoped>
   .styleSubItem{
     text-align: left;
+  }
+  .styleSubItem:last-child, .styleSubItem:last-child > i{
+    color: red;
   }
   .mySideBar{
     border-right: solid 1px #e6e6e6;
