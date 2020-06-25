@@ -80,14 +80,17 @@
     },
     methods: {
       onSubmit() {
-        console.log('Onsubmit!');
         this.isLoading = true;
-        axios.post('/auth/signin', this.formLogin)
+        axios.post('auth/signin', this.formLogin)
           .then(res =>{
             this.isLoading = false;
             localStorage.setItem('userEmail', `${res.data.email}`);
             Cookies.set(AUTH_TOKEN, res.data.auth_token, { expires: 7 });
-            this.$router.push('/user');
+            if(this.$route.name !== 'user') {
+              this.$router.push('/user');
+            } else {
+              window.location.reload();
+            }
           })
           .catch(err=>{
             this.isLoading = false;

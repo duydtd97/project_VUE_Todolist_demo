@@ -7,12 +7,7 @@
     <el-menu
         class="el-menu-vertical-demo"
         style='border: none'
-        @open="handleOpen"
-        @close="handleClose">
-      <el-menu-item index="2" class='styleSubItem'>
-        <i class="el-icon-switch-button"></i>
-        <span>Navigator Two</span>
-      </el-menu-item>
+    >
       <el-menu-item index="2" class='styleSubItem' @click='logout'>
         <i class="el-icon-switch-button"></i>
         <span>Logout</span>

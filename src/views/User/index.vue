@@ -9,25 +9,32 @@
       </el-col>
     </el-row>
     <el-row v-else class="tac">
-      <p>chua dang nhap ban oi</p>
+      <h1>Bạn cần đăng nhập để truy cap vao day</h1>
+      <Login @load="loadData" v-bind:open='true'/>
     </el-row>
   </div>
 </template>
 
 <script>
   import {AUTH_TOKEN} from '@/utils/axiosInstance';
+  import Login        from '@/views/Home/components/Login';
   import Dashboard    from '@/views/User/components/Dashboard/index';
   import SideBar      from '@/components/NavBar/SideBar';
   import Cookies      from 'js-cookie';
 
   export default {
     name:"User",
-    components: {Dashboard, SideBar},
+    components: {Login, Dashboard, SideBar},
     data () {
       return {
         isLogin: Cookies.get(AUTH_TOKEN)
       }
-    }
+    },
+    methods: {
+      loadData() {
+        this.isLogin = Cookies.get(AUTH_TOKEN);
+      }
+    },
   };
 </script>
 
