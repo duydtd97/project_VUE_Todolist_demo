@@ -21,8 +21,9 @@
                   </el-form-item>
                 </el-form>
 
-                <p style='margin-top: 40px'>Chưa có tài khoản thì
-                  <b style= 'cursor: pointer' @click = "openFormRegister()">Đăng kí </b> đi bạn ôi! </p>
+                <p class='mgTop40'>Chưa có tài khoản thì
+                  <b style= 'cursor: pointer' @click = "openFormRegister()">Đăng kí </b> đi bạn ôi!
+                </p>
               </div>
             </div>
           </el-collapse-transition>

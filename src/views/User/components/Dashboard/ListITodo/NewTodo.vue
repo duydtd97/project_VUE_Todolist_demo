@@ -3,7 +3,7 @@
     <el-form :model = "ruleForm" :rules = "rules" ref = "ruleForm">
       <div v-show = 'open'>
         <el-row type = "flex" justify = 'space-between' class = 'el-row-custom'>
-          <el-col :offset = '1' :span = "16" style = 'text-align: left'>
+          <el-col :span = "16" style = 'text-align: left'>
             <el-form-item prop = "title">
               <el-input
                   placeholder = "Todo name"
@@ -15,7 +15,7 @@
           <el-col :span = "8">
             <el-row type = "flex" justify = 'end'>
               <el-form-item style = 'margin: 0 8px'>
-                <el-button type = "primary" icon = "el-icon-check" circle :loading="isLoading" @click="submitForm()" />
+                <el-button type = "primary" icon = "el-icon-check" circle :loading="isLoading" @click="submitForm('ruleForm')" />
               </el-form-item>
               <el-form-item>
                 <el-button type = "danger" icon = "el-icon-close" circle @click = "closeForm('ruleForm')" />
@@ -59,19 +59,28 @@
         this.$emit('closeFormAdd');
         this.$refs[formName].resetFields();
       },
-      submitForm() {
+      submitForm(formName) {
         this.isLoading = true;
-        axios.post('api/v1/todos', this.ruleForm)
-          .then(res => {
-            this.isLoading = false;
-            this.$emit('addTodoList');
-            console.log(res);
+        this.$emit('submitAddItem', ()=>{
+          this.$refs[formName].validate((valid) => {
+            if (valid) {
+              axios.post('api/v1/todos', this.ruleForm)
+                .then(res => {
+                  this.isLoading = false;
+                  this.$emit('addTodoList');
+                  console.log(res);
+                })
+                .catch(err => {
+                  this.isLoading = false;
+                  console.log(err);
+                });
+            } else {
+              this.isLoading = false;
+              return false;
+            }
           })
-          .catch(err => {
-            this.isLoading = false;
-            console.log(err);
-          });
-      },
+        })
+      }
     },
   };
 </script>

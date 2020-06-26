@@ -21,11 +21,11 @@
         </el-col>
       </el-row>
 
-      <el-row style='margin-top: 40px'>
-        <el-col :span='11' class='box_ListTodo'>
+      <el-row :gutter='20' style='margin-top: 40px'>
+        <el-col :span='13' class='box_ListTodo'>
           <div v-if='listTodo'>
             <div v-for='(item, id) in listTodo' v-bind:key='id'>
-              <TodoItem :title='item.title' :idTodo='item.id' @deleteTodo='deleteTodo'/>
+              <TodoItem :title='item.title' :idTodo='item.id' @afterDeleteTodo='afterCloseDialog' @afterEditTodo='afterCloseDialog'/>
             </div>
 
             <el-pagination
@@ -44,8 +44,8 @@
           </div>
         </el-col>
 
-        <el-col :span='12'>
-          <NewItem v-bind:open='showAddItem' @closeFormAdd='showFormAdd' @addTodoList='addTodoList'/>
+        <el-col :span='11'>
+          <NewTodo v-bind:open='showAddItem' @closeFormAdd='showFormAdd' @addTodoList='afterAddTodo'/>
         </el-col>
       </el-row>
     </el-col>
@@ -54,56 +54,55 @@
 
 <script>
   import {axios}  from '@/utils/axiosInstance';
-  import TodoItem from '@/views/User/components/Dashboard/ListItem/Item';
-  import NewItem  from '@/views/User/components/Dashboard/ListItem/NewItem';
-  import qs from 'query-string';
+  import TodoItem from '@/views/User/components/Dashboard/ListITodo/Todo';
+  import NewTodo  from '@/views/User/components/Dashboard/ListITodo/NewTodo';
+  import qs       from 'query-string';
 
   export default {
     name: 'Dashboard',
-    components: {NewItem, TodoItem},
+    components: {NewTodo, TodoItem},
     data() {
       return {
         input: '',
         showAddItem: false,
         listTodo: [],
         currentPage: 1,
-        totalPage: 0
+        totalPage: 0,
       }
     },
     methods:{
       showFormAdd(){
         this.showAddItem = !this.showAddItem;
       },
-      addTodoList(){
+      afterAddTodo(){
         this.currentPage = 1;
-        const query = {
-          page: this.currentPage,
-          limit: 5
-        };
-        axios.get(`api/v1/todos?${qs.stringify(query)}`)
-          .then(res =>{
-            this.listTodo = res.data;
-            this.totalPage = parseInt(res.headers['x-total-pages'],0);
-          })
-          .catch(err =>{
-            console.log(err);
-          });
+
+        this.getData(this.currentPage, (res)=>{
+          this.listTodo = res.data;
+          this.totalPage = parseInt(res.headers['x-total-pages'],0);
+        });
       },
-      deleteTodo(id){
-        console.log(id);
+      afterCloseDialog(){
+        this.getData(this.currentPage, (res)=>{
+          this.listTodo = res.data;
+        });
       },
       changePage(page){
         this.currentPage = page;
 
+        this.getData(this.currentPage, (res)=>{
+          this.listTodo = res.data;
+        });
+      },
+      getData(page, callback){
         const query = {
           page: page,
           limit: 5
         };
-        const url = `api/v1/todos?${qs.stringify(query)}`;
 
-        axios.get(url)
+        axios.get(`api/v1/todos?${qs.stringify(query)}`)
           .then(res =>{
-            this.listTodo = res.data;
+            callback(res);
           })
           .catch(err =>{
             console.log(err);
@@ -111,20 +110,12 @@
       },
     },
     beforeMount(){
-      const query = {
-        page: this.currentPage,
-        limit: 5
-      };
-
-      axios.get(`api/v1/todos?${qs.stringify(query)}`)
-        .then(res =>{
-          this.listTodo = res.data;
-          this.totalPage = parseInt(res.headers['x-total-pages'],0);
-        })
-        .catch(err =>{
-          console.log(err);
-        })
+      this.getData(this.currentPage, (res)=>{
+        this.listTodo = res.data;
+        this.totalPage = parseInt(res.headers['x-total-pages'],0);
+      });
     },
+
   };
 </script>
 
