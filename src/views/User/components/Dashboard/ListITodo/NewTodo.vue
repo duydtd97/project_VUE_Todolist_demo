@@ -1,6 +1,6 @@
 <template>
   <transition name = "el-fade-in-linear">
-    <el-form :model = "ruleForm" :rules = "rules" ref = "ruleForm">
+    <el-form :model = "ruleForm" :rules = "rules" :ref = "'ruleForm'">
       <div v-show = 'open'>
         <el-row type = "flex" justify = 'space-between' class = 'el-row-custom'>
           <el-col :span = "16" style = 'text-align: left'>
@@ -15,7 +15,7 @@
           <el-col :span = "8">
             <el-row type = "flex" justify = 'end'>
               <el-form-item style = 'margin: 0 8px'>
-                <el-button type = "primary" icon = "el-icon-check" circle :loading="isLoading" @click="submitForm('ruleForm')" />
+                <el-button type = "primary" icon = "el-icon-check" circle :loading="isLoading" @click = "submitForm('ruleForm')"/>
               </el-form-item>
               <el-form-item>
                 <el-button type = "danger" icon = "el-icon-close" circle @click = "closeForm('ruleForm')" />
@@ -29,7 +29,6 @@
 </template>
 
 <script>
-  import { axios } from '@/utils/axiosInstance';
 
   export default {
     name: 'NewItem',
@@ -38,20 +37,22 @@
         type: Boolean,
         default: false,
       },
+      ruleForm: Object,
+      rules: Object,
     },
     data() {
       return {
         isLoading: false,
 
-        ruleForm: {
-          title: '',
-        },
-        rules: {
-          title: [
-            {required: true, message: 'Please input name', trigger: 'blur'},
-            {min: 3, message: 'Length should be at least 3 character', trigger: 'blur'},
-          ],
-        },
+        // ruleForm: {
+        //   title: '',
+        // },
+        // rules: {
+        //   title: [
+        //     {required: true, message: 'Please input name', trigger: 'blur'},
+        //     {min: 3, message: 'Length should be at least 3 character', trigger: 'blur'},
+        //   ],
+        // },
       };
     },
     methods: {
@@ -61,24 +62,14 @@
       },
       submitForm(formName) {
         this.isLoading = true;
-        this.$emit('submitAddItem', ()=>{
-          this.$refs[formName].validate((valid) => {
-            if (valid) {
-              axios.post('api/v1/todos', this.ruleForm)
-                .then(res => {
-                  this.isLoading = false;
-                  this.$emit('addTodoList');
-                  console.log(res);
-                })
-                .catch(err => {
-                  this.isLoading = false;
-                  console.log(err);
-                });
-            } else {
-              this.isLoading = false;
-              return false;
-            }
-          })
+        this.$refs[formName].validate((valid) => {
+          if (valid) {
+            this.$emit('submitFormAdd')
+
+          } else {
+            this.isLoading = false;
+            return false;
+          }
         })
       }
     },

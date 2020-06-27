@@ -1,50 +1,39 @@
 <template>
   <el-row type="flex" justify='space-between' class='el-row-custom'>
     <el-col :span="16" style='text-align: left'>
-      <h4 style='cursor: pointer'>{{title}}</h4>
+      <h4 style='cursor: pointer'>{{data.title}}</h4>
     </el-col>
     <el-col :span="8">
       <el-row type="flex" justify='end'>
 
-        <el-button type="primary" icon="el-icon-edit" circle @click='openDialogEdit = idTodo'/>
+        <el-button type="primary" icon="el-icon-edit" circle @click='openDialogEdit'/>
 
-        <el-button type="danger" icon="el-icon-delete" circle @click='openDialogDel = idTodo'/>
+        <el-button type="danger" icon="el-icon-delete" circle @click='openDialogDel'/>
 
       </el-row>
     </el-col>
-
-    <DialogConfirmDelete :titleTodo='title' :open='openDialogDel' :id='idTodo' @closeDialog='closeDialog' @afterDeleteTodo='afterDeleteTodo'/>
-    <DialogEditItem :propsTitleTodo='title' :open='openDialogEdit' :id='idTodo' @closeDialogEdit='closeDialogEdit'/>
   </el-row>
 </template>
 
 <script>
-  import DialogConfirmDelete from '@/views/User/components/DialogConfirmDelete';
-  import DialogEditItem      from '@/views/User/components/DialogEditItem';
+
 
   export default {
     name: "TodoItem",
-    components: {DialogEditItem, DialogConfirmDelete},
+    components: {},
     props:{
-      title: String,
-      idTodo: Number
+      data: Object
     },
     data(){
       return{
-        openDialogDel: 0,
-        openDialogEdit: 0
       }
     },
     methods:{
-      closeDialog(){
-        this.openDialogDel = 0;
+      openDialogEdit(){
+        this.$emit('openDialogEdit');
       },
-      closeDialogEdit(){
-        this.openDialogEdit = 0;
-        this.$emit('afterEditTodo')
-      },
-      afterDeleteTodo(){
-        this.$emit('afterDeleteTodo')
+      openDialogDel(){
+        this.$emit('openDialogDel');
       }
     }
   };

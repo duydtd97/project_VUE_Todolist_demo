@@ -35,6 +35,11 @@
         this.isLogin = Cookies.get(AUTH_TOKEN);
       }
     },
+    watch:{
+      isLogin(){
+        window.location.reload()
+      }
+    }
   };
 </script>
 

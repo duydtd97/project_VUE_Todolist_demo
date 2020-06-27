@@ -25,7 +25,10 @@
         <el-col :span='13' class='box_ListTodo'>
           <div v-if='listTodo'>
             <div v-for='(item, id) in listTodo' v-bind:key='id'>
-              <TodoItem :title='item.title' :idTodo='item.id' @afterDeleteTodo='afterCloseDialog' @afterEditTodo='afterCloseDialog'/>
+              <TodoItem :data='item'
+                        @openDialogDel='showDialogDel(item)'
+                        @openDialogEdit='showDialogEdit(item)'
+                        />
             </div>
 
             <el-pagination
@@ -45,34 +48,69 @@
         </el-col>
 
         <el-col :span='11'>
-          <NewTodo v-bind:open='showAddItem' @closeFormAdd='showFormAdd' @addTodoList='afterAddTodo'/>
+          <NewTodo v-if='showAddInput'
+                   :open='showAddInput'
+                   :rule-form='formAddTodo'
+                   :rules='rulesTodo'
+                   @closeFormAdd='showFormAdd'
+                   @submitFormAdd='submitFormAddTodo'
+                   />
         </el-col>
       </el-row>
     </el-col>
+
+    <DialogConfirmDelete v-if='openDialogDel' :data='selectedItem' :open='openDialogDel' @closeDialog='afterCloseDialog'/>
+    <DialogEditItem v-if='openDialogEdit' :data='selectedItem' :open='openDialogEdit' @closeDialogEdit='afterCloseDialog'/>
   </el-row>
 </template>
 
 <script>
-  import {axios}  from '@/utils/axiosInstance';
-  import TodoItem from '@/views/User/components/Dashboard/ListITodo/Todo';
-  import NewTodo  from '@/views/User/components/Dashboard/ListITodo/NewTodo';
-  import qs       from 'query-string';
+  import {axios}             from '@/utils/axiosInstance';
+  import TodoItem            from '@/views/User/components/Dashboard/ListITodo/Todo';
+  import NewTodo             from '@/views/User/components/Dashboard/ListITodo/NewTodo';
+  import DialogConfirmDelete from '@/views/User/components/DialogConfirmDelete';
+  import DialogEditItem      from '@/views/User/components/DialogEditItem';
+  import qs                  from 'query-string';
 
   export default {
     name: 'Dashboard',
-    components: {NewTodo, TodoItem},
+    components: {DialogConfirmDelete, DialogEditItem, NewTodo, TodoItem},
     data() {
       return {
         input: '',
-        showAddItem: false,
+        showAddInput: false,
         listTodo: [],
         currentPage: 1,
         totalPage: 0,
+        openDialogDel: false,
+        openDialogEdit: false,
+        selectedItem: null,
+        formAddTodo: {
+          title: '',
+        },
+        rulesTodo: {
+          title: [
+            {required: true, message: 'Please input name', trigger: 'blur'},
+            {min: 3, message: 'Length should be at least 3 character', trigger: 'blur'},
+          ],
+        },
       }
     },
     methods:{
       showFormAdd(){
-        this.showAddItem = !this.showAddItem;
+        this.showAddInput = !this.showAddInput;
+      },
+      submitFormAddTodo(){
+        axios.post('api/v1/todos', this.formAddTodo)
+          .then(res => {
+            // this.isLoading = false;
+            this.afterAddTodo();
+            console.log(res);
+          })
+          .catch(err => {
+            // this.isLoading = false;
+            console.log(err);
+          });
       },
       afterAddTodo(){
         this.currentPage = 1;
@@ -83,9 +121,19 @@
         });
       },
       afterCloseDialog(){
+        this.openDialogDel = false;
+        this.openDialogEdit = false;
         this.getData(this.currentPage, (res)=>{
           this.listTodo = res.data;
         });
+      },
+      showDialogDel(data){
+        this.selectedItem = data;
+        this.openDialogDel = true;
+      },
+      showDialogEdit(data){
+        this.selectedItem = data;
+        this.openDialogEdit = true;
       },
       changePage(page){
         this.currentPage = page;

@@ -1,9 +1,9 @@
 <template>
   <el-dialog
-      :title="titleTodo"
-      :visible="open === id"
+      :title="data.title"
+      :visible="open"
       width="30%"
-      :before-close="handleClose">
+      :before-close="handleCloseDialog">
     <span>Chắc chắn xóa không bạn ôi?</span>
     <span slot="footer" class="dialog-footer">
       <el-button @click="handleCloseDialog">Thôi, k xóa nữa!</el-button>
@@ -18,9 +18,11 @@
   export default {
     name: 'DialogConfirmDelete',
     props:{
-      open: Number,
-      id: Number,
-      titleTodo: String
+      open: {
+        type: Boolean,
+        default: false
+      },
+      data: Object
     },
     data() {
       return {
@@ -28,18 +30,11 @@
       };
     },
     methods: {
-      handleClose(done) {
-        this.$confirm('Are you sure to close this dialog?')
-          .then(() => {
-            done();
-          })
-          .catch(() => {});
-      },
       handleCloseDialog(){
         this.$emit('closeDialog');
       },
       confirmDelete(){
-        axios.delete(`api/v1/todos/${this.id}`)
+        axios.delete(`api/v1/todos/${this.data.id}`)
           .then(res =>{
             // this.$emit('delTodo', this.id);
             this.$emit('afterDeleteTodo');

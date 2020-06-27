@@ -1,12 +1,12 @@
 <template>
   <el-dialog
-      :title = "formEdit.title"
-      :visible = "open === id"
+      title = "Edit"
+      :visible = "open"
       width = "30%"
       :before-close = "handleCloseDialog">
     <el-form :model = "formEdit" :rules = "rules" ref = "formEdit">
       <div>
-        <el-form-item prop = "title" label='Title'>
+        <el-form-item prop = "title" label='To-do Title'>
           <el-input
               placeholder = "Todo name"
               v-model = "formEdit.title"
@@ -14,7 +14,7 @@
           </el-input>
         </el-form-item>
 
-        <NewTodo v-bind:open='showAddItem' @closeFormAdd='showFormAdd' @addTodoList='afterAddTodo'/>
+<!--        <NewTodo v-bind:open='showAddItem' @closeFormAdd='showFormAdd' @addTodoList='afterAddTodo'/>-->
 
         <div v-if='listItem.length'>
           <div v-for='(item, id) in listItem' v-bind:key='id'>
@@ -30,7 +30,7 @@
         <span slot = "footer" class = "dialog-footer">
           <el-form-item>
             <el-button type = "primary" style = 'width: 100%' :loading = "isLoading"
-                       @click = "submitForm('formEdit')">Save</el-button>
+                       @click = "saveTodo('formEdit')">Save</el-button>
           </el-form-item>
         </span>
       </div>
@@ -41,15 +41,14 @@
 
 <script>
   import {axios}  from '@/utils/axiosInstance';
-  import NewTodo  from '@/views/User/components/Dashboard/ListITodo/NewTodo';
+  // import NewTodo  from '@/views/User/components/Dashboard/ListITodo/NewTodo';
 
   export default {
     name: 'DialogEditItem',
-    components: {NewTodo},
+    // components: {NewTodo},
     props: {
-      open: Number,
-      id: Number,
-      propsTitleTodo: String,
+      open: Boolean,
+      data: Object
     },
     data() {
       return {
@@ -58,7 +57,7 @@
         listItem: [],
 
         formEdit: {
-          title: this.propsTitleTodo,
+          title: this.data.title,
         },
         rules: {
           title: [
@@ -68,6 +67,13 @@
         },
       };
     },
+    watch:{
+      data() {
+        this.getData((res)=>{
+          this.listItem = res.data;
+        });
+      }
+    },
     methods: {
       handleCloseDialog() {
         this.$emit('closeDialogEdit');
@@ -76,17 +82,18 @@
         this.showAddItem = !this.showAddItem;
       },
       afterAddTodo(){
-        this.getData( (res)=>{
+        this.getData((res)=>{
           this.listItem = res.data;
         });
       },
-      submitForm(formName) {
+      saveTodo(formName) {
         this.isLoading = true;
 
         this.$refs[formName].validate((valid) => {
           if (valid) {
-            axios.put(`api/v1/todos/${this.id}`, this.formEdit)
+            axios.put(`api/v1/todos/${this.data.id}`, this.formEdit)
               .then(res => {
+                console.log(res);
                 this.isLoading = false;
                 this.formEdit.title = res.data.title;
               })
@@ -120,7 +127,7 @@
         })
       },
       getData(callback){
-        axios.get(`api/v1/todos/${this.id}/items`)
+        axios.get(`api/v1/todos/${this.data.id}/items`)
           .then(res =>{
             callback(res);
           })
@@ -129,11 +136,13 @@
           })
       },
     },
-    beforeMount(){
-      this.getData((res)=>{
-        this.listItem = res.data;
-      });
-    },
+    // beforeMount(){
+    //   console.log(this.data);
+    //   this.getData((res)=>{
+    //     this.listItem = res.data;
+    //   });
+    // },
+
   };
 </script>
 
