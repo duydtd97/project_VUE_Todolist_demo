@@ -8,13 +8,20 @@
       <div>
         <el-form-item prop = "title" label='To-do Title'>
           <el-input
-              placeholder = "Todo name"
+              placeholder = "Title"
               v-model = "formEdit.title"
               clearable>
           </el-input>
         </el-form-item>
 
-<!--        <NewTodo v-bind:open='showAddItem' @closeFormAdd='showFormAdd' @addTodoList='afterAddTodo'/>-->
+        <NewTodo v-if='showAddItem'
+                 :open='showAddItem'
+                 :rule-form='formAddItem'
+                 :rules='rulesItem'
+                 :is-loading='isLoading'
+                 @closeFormAdd='showFormAdd'
+                 @submitFormAdd='submitFormAddItem'
+        />
 
         <div v-if='listItem.length'>
           <div v-for='(item, id) in listItem' v-bind:key='id'>
@@ -41,11 +48,11 @@
 
 <script>
   import {axios}  from '@/utils/axiosInstance';
-  // import NewTodo  from '@/views/User/components/Dashboard/ListITodo/NewTodo';
+  import NewTodo  from '@/views/User/components/Dashboard/ListITodo/NewTodo';
 
   export default {
     name: 'DialogEditItem',
-    // components: {NewTodo},
+    components: {NewTodo},
     props: {
       open: Boolean,
       data: Object
@@ -55,6 +62,16 @@
         showAddItem: false,
         isLoading: false,
         listItem: [],
+
+        formAddItem: {
+          title: '',
+        },
+        rulesItem: {
+          title: [
+            {required: true, message: 'Please input name', trigger: 'blur'},
+            {min: 3, message: 'Length should be at least 3 character', trigger: 'blur'},
+          ],
+        },
 
         formEdit: {
           title: this.data.title,
@@ -85,6 +102,19 @@
         this.getData((res)=>{
           this.listItem = res.data;
         });
+      },
+      submitFormAddItem(){
+        this.isLoading = true;
+        axios.post(`api/v1/todos/${this.data.id}/items`, this.formAddItem)
+          .then(res => {
+            this.afterAddTodo();
+            this.isLoading = false;
+            console.log(res);
+          })
+          .catch(err => {
+            this.isLoading = false;
+            console.log(err);
+          });
       },
       saveTodo(formName) {
         this.isLoading = true;

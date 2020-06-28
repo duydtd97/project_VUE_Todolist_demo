@@ -52,6 +52,7 @@
                    :open='showAddInput'
                    :rule-form='formAddTodo'
                    :rules='rulesTodo'
+                   :is-loading='isLoading'
                    @closeFormAdd='showFormAdd'
                    @submitFormAdd='submitFormAddTodo'
                    />
@@ -85,6 +86,7 @@
         openDialogDel: false,
         openDialogEdit: false,
         selectedItem: null,
+        isLoading:false,
         formAddTodo: {
           title: '',
         },
@@ -101,14 +103,15 @@
         this.showAddInput = !this.showAddInput;
       },
       submitFormAddTodo(){
+        this.isLoading = true;
         axios.post('api/v1/todos', this.formAddTodo)
           .then(res => {
-            // this.isLoading = false;
             this.afterAddTodo();
+            this.isLoading = false;
             console.log(res);
           })
           .catch(err => {
-            // this.isLoading = false;
+            this.isLoading = false;
             console.log(err);
           });
       },
@@ -125,6 +128,7 @@
         this.openDialogEdit = false;
         this.getData(this.currentPage, (res)=>{
           this.listTodo = res.data;
+          this.totalPage = parseInt(res.headers['x-total-pages'],0);
         });
       },
       showDialogDel(data){

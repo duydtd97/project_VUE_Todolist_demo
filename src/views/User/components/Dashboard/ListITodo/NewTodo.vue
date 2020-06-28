@@ -39,20 +39,14 @@
       },
       ruleForm: Object,
       rules: Object,
+      isLoading: {
+        type: Boolean,
+        default: false,
+      },
     },
     data() {
       return {
-        isLoading: false,
 
-        // ruleForm: {
-        //   title: '',
-        // },
-        // rules: {
-        //   title: [
-        //     {required: true, message: 'Please input name', trigger: 'blur'},
-        //     {min: 3, message: 'Length should be at least 3 character', trigger: 'blur'},
-        //   ],
-        // },
       };
     },
     methods: {
@@ -61,13 +55,10 @@
         this.$refs[formName].resetFields();
       },
       submitForm(formName) {
-        this.isLoading = true;
         this.$refs[formName].validate((valid) => {
           if (valid) {
             this.$emit('submitFormAdd')
-
           } else {
-            this.isLoading = false;
             return false;
           }
         })
