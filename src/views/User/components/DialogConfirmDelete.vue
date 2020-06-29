@@ -3,6 +3,7 @@
       :title="data.title"
       :visible="open"
       width="30%"
+      append-to-body
       :before-close="handleCloseDialog">
     <span>Chắc chắn xóa không bạn ôi?</span>
     <span slot="footer" class="dialog-footer">
@@ -13,7 +14,6 @@
 </template>
 
 <script>
-  import {axios} from '@/utils/axiosInstance';
 
   export default {
     name: 'DialogConfirmDelete',
@@ -34,16 +34,7 @@
         this.$emit('closeDialog');
       },
       confirmDelete(){
-        axios.delete(`api/v1/todos/${this.data.id}`)
-          .then(res =>{
-            // this.$emit('delTodo', this.id);
-            this.$emit('afterDeleteTodo');
-            this.$emit('closeDialog');
-            console.log(res);
-          })
-          .catch(err =>{
-            console.log(err);
-          });
+        this.$emit('submitDel', this.data.id);
       }
     }
   };

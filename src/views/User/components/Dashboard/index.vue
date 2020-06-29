@@ -8,14 +8,16 @@
         <el-col :span="20">
           <el-row :gutter="8" type="flex" justify="end">
             <el-col :span="10">
-              <el-input
-                  placeholder="Search item by enter..."
-                  v-model="input"
-                  clearable>
-              </el-input>
+
+                  <el-input
+                      placeholder="Search item by enter..."
+                      v-model="inputSearch"
+                      @keyup.enter.native='submitSearchTodo'
+                      clearable>
+                  </el-input>
             </el-col>
             <el-col :span="3">
-              <el-button type="primary" @click='showFormAdd()'>Add New</el-button>
+              <el-button type="primary" @click='visibleFormAdd()'>Add New</el-button>
             </el-col>
           </el-row>
         </el-col>
@@ -26,6 +28,7 @@
           <div v-if='listTodo'>
             <div v-for='(item, id) in listTodo' v-bind:key='id'>
               <TodoItem :data='item'
+                        :title='item.title'
                         @openDialogDel='showDialogDel(item)'
                         @openDialogEdit='showDialogEdit(item)'
                         />
@@ -53,14 +56,16 @@
                    :rule-form='formAddTodo'
                    :rules='rulesTodo'
                    :is-loading='isLoading'
-                   @closeFormAdd='showFormAdd'
+                   :txt-input='formAddTodo.title'
+                   @inputChange='inputChange'
+                   @closeFormAdd='visibleFormAdd'
                    @submitFormAdd='submitFormAddTodo'
                    />
         </el-col>
       </el-row>
     </el-col>
 
-    <DialogConfirmDelete v-if='openDialogDel' :data='selectedItem' :open='openDialogDel' @closeDialog='afterCloseDialog'/>
+    <DialogConfirmDelete v-if='openDialogDel' :data='selectedItem' :open='openDialogDel' @closeDialog='afterCloseDialog' @submitDel='submitDel'/>
     <DialogEditItem v-if='openDialogEdit' :data='selectedItem' :open='openDialogEdit' @closeDialogEdit='afterCloseDialog'/>
   </el-row>
 </template>
@@ -78,7 +83,7 @@
     components: {DialogConfirmDelete, DialogEditItem, NewTodo, TodoItem},
     data() {
       return {
-        input: '',
+        inputSearch: '',
         showAddInput: false,
         listTodo: [],
         currentPage: 1,
@@ -87,6 +92,7 @@
         openDialogEdit: false,
         selectedItem: null,
         isLoading:false,
+
         formAddTodo: {
           title: '',
         },
@@ -99,8 +105,27 @@
       }
     },
     methods:{
-      showFormAdd(){
+      submitSearchTodo(){
+        console.log('enter');
+        const query = {
+          q: this.inputSearch,
+          page: 1,
+          limit: 5
+        };
+        axios.get(`api/v1/todos/search?${qs.stringify(query)}`)
+          .then(res => {
+            this.afterAddTodo();
+            console.log(res);
+          })
+          .catch(err => {
+            console.log(err);
+          });
+      },
+      visibleFormAdd(){
         this.showAddInput = !this.showAddInput;
+      },
+      inputChange(value){
+        this.formAddTodo.title = value;
       },
       submitFormAddTodo(){
         this.isLoading = true;
@@ -112,6 +137,16 @@
           })
           .catch(err => {
             this.isLoading = false;
+            console.log(err);
+          });
+      },
+      submitDel(idTodo){
+        axios.delete(`api/v1/todos/${idTodo}`)
+          .then(res =>{
+            this.afterCloseDialog();
+            console.log(res);
+          })
+          .catch(err =>{
             console.log(err);
           });
       },

@@ -51,7 +51,6 @@
     },
     data() {
       const emailIsExist = (rule, value, callback) => {
-        console.log('email exist' + this.errCode);
         if (value && this.errCode === 401){
           callback(new Error(this.errMess));
         }

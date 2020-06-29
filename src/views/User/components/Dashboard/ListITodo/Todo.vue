@@ -1,7 +1,7 @@
 <template>
   <el-row type="flex" justify='space-between' class='el-row-custom'>
     <el-col :span="16" style='text-align: left'>
-      <h4 style='cursor: pointer'>{{data.title}}</h4>
+      <h4 style='cursor: pointer'>{{title}}</h4>
     </el-col>
     <el-col :span="8">
       <el-row type="flex" justify='end'>
@@ -22,6 +22,7 @@
     name: "TodoItem",
     components: {},
     props:{
+      title: String,
       data: Object
     },
     data(){

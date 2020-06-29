@@ -27,7 +27,7 @@
     components: {Login, Dashboard, SideBar},
     data () {
       return {
-        isLogin: Cookies.get(AUTH_TOKEN)
+        isLogin: ''
       }
     },
     methods: {
@@ -35,10 +35,8 @@
         this.isLogin = Cookies.get(AUTH_TOKEN);
       }
     },
-    watch:{
-      isLogin(){
-        window.location.reload()
-      }
+    beforeMount(){
+      this.isLogin = Cookies.get(AUTH_TOKEN);
     }
   };
 </script>
