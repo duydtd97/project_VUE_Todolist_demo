@@ -1,14 +1,14 @@
 <template>
   <el-dialog
-      :title="data.title"
-      :visible="open"
-      width="30%"
+      :title = "data.title"
+      :visible = "open"
+      width = "30%"
       append-to-body
-      :before-close="handleCloseDialog">
+      :before-close = "handleCloseDialog">
     <span>Chắc chắn xóa không bạn ôi?</span>
-    <span slot="footer" class="dialog-footer">
-      <el-button @click="handleCloseDialog">Thôi, k xóa nữa!</el-button>
-      <el-button type="primary" @click="confirmDelete">Có, xóa đi!</el-button>
+    <span slot = "footer" class = "dialog-footer">
+      <el-button @click = "handleCloseDialog">Thôi, k xóa nữa!</el-button>
+      <el-button type = "primary" @click = "confirmDelete">Có, xóa đi!</el-button>
     </span>
   </el-dialog>
 </template>
@@ -17,26 +17,24 @@
 
   export default {
     name: 'DialogConfirmDelete',
-    props:{
+    props: {
       open: {
         type: Boolean,
-        default: false
+        default: false,
       },
-      data: Object
+      data: Object,
     },
     data() {
-      return {
-
-      };
+      return {};
     },
     methods: {
-      handleCloseDialog(){
+      handleCloseDialog() {
         this.$emit('closeDialog');
       },
-      confirmDelete(){
+      confirmDelete() {
         this.$emit('submitDel', this.data.id);
-      }
-    }
+      },
+    },
   };
 </script>
 

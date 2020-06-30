@@ -3,29 +3,30 @@
     <el-row type = "flex" class = "row-bg mgTop40" justify = "center">
       <el-col :span = "8">
         <div>
-          <transition name="el-zoom-in-top">
+          <transition name = "el-zoom-in-top">
             <div v-show = "open">
               <div class = "transition-box">
-                <el-form ref = "formRegister" :model = "formRegister" :rules="rules" :label-position = "'left'" v-on:submit.prevent>
+                <el-form ref = "formRegister" :model = "formRegister" :rules = "rules" :label-position = "'left'"
+                         v-on:submit.prevent>
                   <el-form-item label = "Email"
-                                prop="email"
-                                v-bind:error='errCode === 201 ? "" : errMess'
+                                prop = "email"
+                                v-bind:error = 'errCode === 201 ? "" : errMess'
                   >
                     <el-input v-model = "formRegister.email" />
                   </el-form-item>
-                  <el-form-item label = "Password" prop="password">
-                    <el-input v-model = "formRegister.password" autocomplete="off" type='password'/>
+                  <el-form-item label = "Password" prop = "password">
+                    <el-input v-model = "formRegister.password" autocomplete = "off" type = 'password' />
                   </el-form-item>
-                  <el-form-item label = "Confirm Password" prop="password_confirmation">
-                    <el-input v-model = "formRegister.password_confirmation" autocomplete="off" type='password'/>
+                  <el-form-item label = "Confirm Password" prop = "password_confirmation">
+                    <el-input v-model = "formRegister.password_confirmation" autocomplete = "off" type = 'password' />
                   </el-form-item>
                   <el-form-item>
                     <el-button type = "primary" @click = "onSubmit">Sign Up</el-button>
                   </el-form-item>
                 </el-form>
 
-                <p style='margin-top: 40px'>Có tài khoaỏn rồi thì
-                  <b style= 'cursor: pointer' @click = "openFormLogin()" >Đăng Nhập </b> luôn nha! </p>
+                <p style = 'margin-top: 40px'>Có tài khoaỏn rồi thì
+                  <b style = 'cursor: pointer' @click = "openFormLogin()">Đăng Nhập </b> luôn nha! </p>
               </div>
             </div>
           </transition>
@@ -51,7 +52,7 @@
       },
     },
     data() {
-      const validatePass = (rule, value, callback) => {
+      const validatePass  = (rule, value, callback) => {
         if (value === '') {
           callback(new Error('Please input the password'));
         } else {
@@ -71,7 +72,7 @@
         }
       };
 
-      return{
+      return {
         errCode: '',
         errMess: '',
         isLoading: false,
@@ -83,41 +84,41 @@
         },
         rules: {
           email: [
-              { required: true, message: 'Please input email address', trigger: 'blur' },
-              { type: 'email', message: 'Please input correct email address', trigger: ['blur', 'change'] },
-            ],
+            {required: true, message: 'Please input email address', trigger: 'blur'},
+            {type: 'email', message: 'Please input correct email address', trigger: ['blur', 'change']},
+          ],
           password: [
-            { required: true, message: 'Please input password', trigger: 'blur' },
-            { validator: validatePass, trigger: 'blur' }
+            {required: true, message: 'Please input password', trigger: 'blur'},
+            {validator: validatePass, trigger: 'blur'},
           ],
           password_confirmation: [
-            { required: true, message: 'Please input password_confirmation', trigger: 'blur' },
-            { validator: validatePass2, trigger: 'blur' }
+            {required: true, message: 'Please input password_confirmation', trigger: 'blur'},
+            {validator: validatePass2, trigger: 'blur'},
           ],
-        }
-      }
+        },
+      };
     },
     methods: {
       onSubmit() {
         this.isLoading = true;
 
         axios.post('/auth/signup', this.formRegister)
-          .then(res =>{
+          .then(res => {
             this.isLoading = false;
-            this.errCode = res.status;
-            Cookies.set(AUTH_TOKEN, res.data.auth_token, { expires: 7 });
+            this.errCode   = res.status;
+            Cookies.set(AUTH_TOKEN, res.data.auth_token, {expires: 7});
 
             this.$router.push('/user');
           })
-          .catch(err=>{
+          .catch(err => {
             this.isLoading = false;
-            this.errMess = err.response.data.message;
-            this.errCode = err.response.status;
-          })
+            this.errMess   = err.response.data.message;
+            this.errCode   = err.response.status;
+          });
       },
-      openFormLogin(){
-        this.$emit('openLogin')
-      }
+      openFormLogin() {
+        this.$emit('openLogin');
+      },
     },
   };
 </script>

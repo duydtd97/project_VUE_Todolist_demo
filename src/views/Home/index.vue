@@ -1,15 +1,11 @@
 <template>
   <div class = "hello">
-    <img alt="Vue logo" src="../../assets/logo.png">
+    <img alt = "Vue logo" src = "../../assets/logo.png">
 
-    <h1 class="pre-formatted">Đăng nhập trước đã rồi làm gì thì làm nhé bạn ôi!</h1>
+    <h1 class = "pre-formatted">Đăng nhập trước đã rồi làm gì thì làm nhé !</h1>
 
-<!--    <el-row>-->
-<!--      <el-button @click = "$router.push('/user')">Go to user</el-button>-->
-<!--    </el-row>-->
-
-    <Login v-if='openLogin' v-bind:open = 'openLogin' @openRegister='changeOpenRegister()'/>
-    <Register v-if='openRegister' v-bind:open = 'openRegister' @openLogin='changeOpenLogin()'/>
+    <Login v-if = 'openLogin' v-bind:open = 'openLogin' @openRegister = 'changeOpenRegister()' />
+    <Register v-if = 'openRegister' v-bind:open = 'openRegister' @openLogin = 'changeOpenLogin()' />
 
   </div>
 </template>
@@ -18,6 +14,7 @@
 <script>
   import Login    from '@/views/Home/components/Login';
   import Register from '@/views/Home/components/Register';
+
   export default {
     name: 'Home',
     components: {Register, Login},
@@ -50,7 +47,8 @@
   .pre-formatted {
     white-space: pre;
   }
-  .hello{
+
+  .hello {
     margin-top: 32px;
   }
 </style>

@@ -1,16 +1,16 @@
 <template>
   <div>
-    <el-row v-if='isLogin' class="tac">
-      <el-col :span="6">
-        <SideBar/>
+    <el-row v-if = 'isLogin' class = "tac">
+      <el-col :span = "6">
+        <SideBar />
       </el-col>
-      <el-col :span="18">
-        <Dashboard/>
+      <el-col :span = "18">
+        <Dashboard />
       </el-col>
     </el-row>
-    <el-row v-else class="tac">
+    <el-row v-else class = "tac">
       <h1>Bạn cần đăng nhập để truy cap vao day</h1>
-      <Login @load="loadData" v-bind:open='true'/>
+      <Login @load = "loadData" v-bind:open = 'true' />
     </el-row>
   </div>
 </template>
@@ -23,33 +23,35 @@
   import Cookies      from 'js-cookie';
 
   export default {
-    name:"User",
+    name: 'User',
     components: {Login, Dashboard, SideBar},
-    data () {
+    data() {
       return {
-        isLogin: ''
-      }
+        isLogin: '',
+      };
     },
     methods: {
       loadData() {
         this.isLogin = Cookies.get(AUTH_TOKEN);
-      }
+      },
     },
-    beforeMount(){
+    beforeMount() {
       this.isLogin = Cookies.get(AUTH_TOKEN);
-    }
+    },
   };
 </script>
 
 <style scoped>
-  .tac{
+  .tac {
     margin-top: 32px;
   }
-  .box_avatar{
+
+  .box_avatar {
     display: flex;
     align-items: center;
     justify-content: center;
   }
+
   .el-header, .el-footer {
     background-color: #B3C0D1;
     color: #333;

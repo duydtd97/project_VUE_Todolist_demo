@@ -4,10 +4,9 @@
       :visible = "open"
       width = "30%"
       :before-close = "handleCloseDialog">
-
     <el-form :model = "formEdit" :rules = "rules" ref = "formEdit">
       <div>
-        <el-form-item prop = "title" label='To-do Title'>
+        <el-form-item prop = "title" label = 'To-do Title'>
           <el-input
               placeholder = "Title"
               v-model = "formEdit.title"
@@ -15,45 +14,46 @@
           </el-input>
         </el-form-item>
 
-        <NewTodo v-if='showAddItem'
-                 :open='showAddItem'
-                 :rule-form='formAddItem'
-                 :rules='rulesItem'
-                 :is-loading='isLoading'
-                 :txtInput='formAddItem.content'
-                 @inputChange='inputChange'
-                 @closeFormAdd='visibleFormAdd'
-                 @submitFormAdd='submitFormAddItem'
+        <NewTodo v-if = 'showAddItem'
+                 :open = 'showAddItem'
+                 :rule-form = 'formAddItem'
+                 :rules = 'rulesItem'
+                 :is-loading = 'isLoading'
+                 :txtInput = 'formAddItem.content'
+                 @inputChange = 'inputChange'
+                 @closeFormAdd = 'visibleFormAdd'
+                 @submitFormAdd = 'submitFormAddItem'
         />
 
-        <el-row v-if='listItem.length || loadingData' v-loading="loadingData">
+        <el-row v-if = 'listItem.length || loadingData' v-loading = "loadingData">
           <el-form :model = "formAddItem" :rules = "rulesItem" ref = "formAddItem">
-            <div v-for='(item, id) in listItem' :key='id'>
-              <NewTodo v-if='openFormEditItem && isEditing === item.id'
-                       :open='openFormEditItem && isEditing === item.id'
-                       :rule-form='formAddItem'
-                       :rules='rulesItem'
-                       :is-loading='isLoading'
-                       :txtInput='item.content'
-                       @inputChange='inputChange'
-                       @closeFormAdd='visibleFormEdit'
-                       @submitFormAdd='submitFormEditItem'
+            <div v-for = '(item, id) in listItem' :key = 'id'>
+              <NewTodo v-if = 'openFormEditItem && isEditing === item.id'
+                       :open = 'openFormEditItem && isEditing === item.id'
+                       :rule-form = 'formAddItem'
+                       :rules = 'rulesItem'
+                       :is-loading = 'isLoading'
+                       :txtInput = 'item.content'
+                       @inputChange = 'inputChange'
+                       @closeFormAdd = 'visibleFormEdit'
+                       @submitFormAdd = 'submitFormEditItem'
               />
               <TodoItem v-else
-                        :data='item'
-                        :title="item.content"
-                        @openDialogDel='showDialogDel(item)'
-                        @openDialogEdit='showInputEditItem(item)'
+                        :data = 'item'
+                        :title = "item.content"
+                        @openDialogDel = 'showDialogDel(item)'
+                        @openDialogEdit = 'showInputEditItem(item)'
               />
             </div>
           </el-form>
         </el-row>
 
-        <el-row v-else class='box_empty' v-loading="loadingData">
+        <el-row v-else class = 'box_empty' v-loading = "loadingData">
           <h3>Chua co du lieu </h3>
         </el-row>
 
-        <el-button type = "text" :loading = "isLoading" class='btn__addItem' @click='visibleFormAdd()'>Them moi</el-button>
+        <el-button type = "text" :loading = "isLoading" class = 'btn__addItem' @click = 'visibleFormAdd()'>Them moi
+        </el-button>
 
         <span slot = "footer" class = "dialog-footer">
           <el-form-item>
@@ -63,7 +63,8 @@
         </span>
       </div>
 
-      <DialogConfirmDelete v-if='openDialogDel' :open='openDialogDel' :data='selectedItem'  @closeDialog='afterCloseDialog' @submitDel='submitDel'/>
+      <DialogConfirmDelete v-if = 'openDialogDel' :open = 'openDialogDel' :data = 'selectedItem'
+                           @closeDialog = 'afterCloseDialog' @submitDel = 'submitDel' />
     </el-form>
   </el-dialog>
 </template>
@@ -79,7 +80,7 @@
     components: {DialogConfirmDelete, NewTodo, TodoItem},
     props: {
       open: Boolean,
-      data: Object
+      data: Object,
     },
     data() {
       return {
@@ -112,9 +113,9 @@
         },
       };
     },
-    watch:{
+    watch: {
       data() {
-        this.getData((res)=>{
+        this.getData((res) => {
           this.listItem = res.data;
         });
       },
@@ -127,44 +128,44 @@
         this.$emit('closeDialogEdit');
       },
 
-      visibleFormAdd(){
+      visibleFormAdd() {
         this.showAddItem = !this.showAddItem;
       },
 
-      visibleFormEdit(){
+      visibleFormEdit() {
         this.openFormEditItem = !this.openFormEditItem;
-        this.isEditing = 0;
+        this.isEditing        = 0;
       },
 
-      afterChangeData(){
-        this.getData((res)=>{
+      afterChangeData() {
+        this.getData((res) => {
           this.listItem = res.data;
         });
       },
 
-      afterCloseDialog(){
+      afterCloseDialog() {
         this.openDialogDel = false;
-        this.getData((res)=>{
+        this.getData((res) => {
           this.listItem = res.data;
         });
       },
 
-      showDialogDel(data){
-        this.selectedItem = data;
+      showDialogDel(data) {
+        this.selectedItem  = data;
         this.openDialogDel = true;
       },
 
-      inputChange(value){
+      inputChange(value) {
         this.formAddItem.content = value;
       },
 
-      showInputEditItem(item){
-        this.selectedItem = item;
+      showInputEditItem(item) {
+        this.selectedItem     = item;
         this.openFormEditItem = true;
-        this.isEditing = item.id;
+        this.isEditing        = item.id;
       },
 
-      submitFormAddItem(){
+      submitFormAddItem() {
         this.isLoading = true;
         axios.post(`api/v1/todos/${this.data.id}/items`, this.formAddItem)
           .then(res => {
@@ -178,11 +179,11 @@
           });
       },
 
-      submitFormEditItem(){
+      submitFormEditItem() {
         this.isLoading = true;
         axios.put(`api/v1/todos/${this.selectedItem.todo_id}/items/${this.selectedItem.id}`, this.formAddItem)
           .then(res => {
-            this.isLoading = false;
+            this.isLoading        = false;
             this.openFormEditItem = false;
             this.afterChangeData();
             console.log(res);
@@ -193,13 +194,13 @@
           });
       },
 
-      submitDel(){
+      submitDel() {
         axios.delete(`api/v1/todos/${this.selectedItem.todo_id}/items/${this.selectedItem.id}`)
-          .then(res =>{
+          .then(res => {
             this.afterCloseDialog();
             console.log(res);
           })
-          .catch(err =>{
+          .catch(err => {
             console.log(err);
           });
       },
@@ -211,10 +212,10 @@
           if (valid) {
             axios.put(`api/v1/todos/${this.data.id}`, this.formEdit)
               .then(res => {
-                this.isLoading = false;
+                this.isLoading      = false;
                 this.formEdit.title = res.data.title;
               })
-              .catch(()=> {
+              .catch(() => {
                 this.isLoading = false;
               });
           } else {
@@ -224,41 +225,41 @@
         });
       },
 
-      addItem(formName) {
-        this.isLoading = true;
-        this.$refs[formName].validate((valid) => {
-          if (valid) {
-            axios.post('api/v1/todos', this.ruleForm)
-              .then(res => {
-                this.isLoading = false;
-                this.$emit('addTodoList');
-                console.log(res);
-              })
-              .catch(err => {
-                this.isLoading = false;
-                console.log(err);
-              });
-          } else {
-            this.isLoading = false;
-            return false;
-          }
-        })
-      },
+      // addItem(formName) {
+      //   this.isLoading = true;
+      //   this.$refs[formName].validate((valid) => {
+      //     if (valid) {
+      //       axios.post('api/v1/todos', this.ruleForm)
+      //         .then(res => {
+      //           this.isLoading = false;
+      //           this.$emit('addTodoList');
+      //           console.log(res);
+      //         })
+      //         .catch(err => {
+      //           this.isLoading = false;
+      //           console.log(err);
+      //         });
+      //     } else {
+      //       this.isLoading = false;
+      //       return false;
+      //     }
+      //   });
+      // },
 
-      getData(callback){
+      getData(callback) {
         axios.get(`api/v1/todos/${this.data.id}/items`)
-          .then(res =>{
+          .then(res => {
             callback(res);
           })
-          .catch(err =>{
+          .catch(err => {
             console.log(err);
-          })
+          });
       },
     },
-    beforeMount(){
+    beforeMount() {
       this.loadingData = true;
-      this.getData((res)=>{
-        this.listItem = res.data;
+      this.getData((res) => {
+        this.listItem    = res.data;
         this.loadingData = false;
       });
     },
@@ -267,12 +268,13 @@
 </script>
 
 <style scoped>
-  .btn__addItem{
+  .btn__addItem {
     width: 100%;
     text-align: left;
     margin: 16px 0;
   }
-  .box_empty{
+
+  .box_empty {
     margin: 64px 0;
   }
 </style>
